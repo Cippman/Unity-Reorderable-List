@@ -3,102 +3,127 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Malee {
+namespace CippSharp.Reorderable
+{
 
-	[Serializable]
-	public abstract class ReorderableArray<T> : ICloneable, IList<T>, ICollection<T>, IEnumerable<T> {
+    [Serializable]
+    public abstract class ReorderableArray<T> : ICloneable, IList<T>, ICollection<T>, IEnumerable<T>
+    {
 
-		[SerializeField]
-		private List<T> array = new List<T>();
+        [SerializeField]
+        protected T[] array = new T[0];
 
-		public ReorderableArray()
-			: this(0) {
-		}
+        public ReorderableArray()
+            : this(0)
+        {
+        }
 
-		public ReorderableArray(int length) {
+        public ReorderableArray(int length)
+        {
+            array = new T[length];
+        }
 
-			array = new List<T>(length);
-		}
+        public virtual T this [int index]
+        {
 
-		public T this[int index] {
+            get { return array[index]; }
+            set { array[index] = value; }
+        }
 
-			get { return array[index]; }
-			set { array[index] = value; }
-		}
-		
-		public int Length {
-			
-			get { return array.Count; }
-		}
+        public virtual int Length
+        {
 
-		public bool IsReadOnly {
+            get { return array.Length; }
+        }
 
-			get { return false; }
-		}
+        public virtual bool IsReadOnly
+        {
 
-		public int Count {
+            get { return array.IsReadOnly; }
+        }
 
-			get { return array.Count; }
-		}
+        public virtual int Count
+        {
 
-		public object Clone() {
+            get { return array.Length; }
+        }
 
-			return new List<T>(array);
-		}
+        public virtual object Clone()
+        {
 
-		public bool Contains(T value) {
+            return array.Clone();
+        }
 
-			return array.Contains(value);
-		}
+        public virtual bool Contains(T value)
+        {
 
-		public int IndexOf(T value) {
+            return Array.IndexOf(array, value) >= 0;
+        }
 
-			return array.IndexOf(value);
-		}
+        public virtual int IndexOf(T value)
+        {
 
-		public void Insert(int index, T item) {
+            return Array.IndexOf(array, value);
+        }
 
-			array.Insert(index, item);
-		}
+        public virtual void Insert(int index, T item)
+        {
 
-		public void RemoveAt(int index) {
+            ((IList<T>)array).Insert(index, item);
+        }
 
-			array.RemoveAt(index);
-		}
+        public virtual void RemoveAt(int index)
+        {
 
-		public void Add(T item) {
+            ((IList<T>)array).RemoveAt(index);
+        }
 
-			array.Add(item);
-		}
+        public virtual void Add(T item)
+        {
 
-		public void Clear() {
+            ((IList<T>)array).Add(item);
+        }
 
-			array.Clear();
-		}
+        public virtual void Clear()
+        {
 
-		public void CopyTo(T[] array, int arrayIndex) {
+            ((IList<T>)array).Clear();
+        }
 
-			this.array.CopyTo(array, arrayIndex);
-		}
+        public virtual void CopyTo(T[] array, int arrayIndex)
+        {
 
-		public bool Remove(T item) {
+            ((IList<T>)this.array).CopyTo(array, arrayIndex);
+        }
 
-			return array.Remove(item);
-		}
+        public virtual bool Remove(T item)
+        {
 
-		public T[] ToArray() {
+            return ((IList<T>)array).Remove(item);
+        }
 
-			return array.ToArray();
-		}
+        public virtual IEnumerator<T> GetEnumerator()
+        {
 
-		public IEnumerator<T> GetEnumerator() {
+            return ((IList<T>)array).GetEnumerator();
+        }
 
-			return array.GetEnumerator();
-		}
+        IEnumerator IEnumerable.GetEnumerator()
+        {
 
-		IEnumerator IEnumerable.GetEnumerator() {
+            return ((IList<T>)array).GetEnumerator();
+        }
 
-			return array.GetEnumerator();
-		}
-	}
+        public static implicit operator Array(ReorderableArray<T> reorderableArray)
+        {
+
+            return reorderableArray.array;
+        }
+
+        public static implicit operator T[](ReorderableArray<T> reorderableArray)
+        {
+
+            return reorderableArray.array;
+        }
+    }
 }

@@ -53,7 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   list:
     array:
+    - {fileID: 153236, guid: 4963c3cb67bce2a459043899068fe87c, type: 2}
     - {fileID: 1939093664255724, guid: bd140f6c302d9fa4f8f821dc5c29f532, type: 2}
     - {fileID: 0}
     - {fileID: 1400574306493906}
-    - {fileID: 153236, guid: 4963c3cb67bce2a459043899068fe87c, type: 2}

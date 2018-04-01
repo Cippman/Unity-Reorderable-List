@@ -1,60 +1,67 @@
 ﻿using UnityEditor;
-using Malee.Editor;
+using CippSharpEditor.Reorderable;
 using System;
 
 [CanEditMultipleObjects]
 [CustomEditor(typeof(NameOverride))]
-public class NameOverrideEditor : Editor {
+public class NameOverrideEditor : Editor
+{
 
-	private SerializedProperty autoList;
-	private SerializedProperty dynamicList;
-	private SerializedProperty nameOverride;
-	private SerializedProperty nestedNameOverride;	
+    private SerializedProperty autoList;
+    private SerializedProperty dynamicList;
+    private SerializedProperty nameOverride;
+    private SerializedProperty nestedNameOverride;
 
-	private void OnEnable() {
+    private void OnEnable()
+    {
 
-		//get references to the properties. Could also create the ReorderableList directly here which would avoid the lookup in ReorderableDrawer.GetList
-		//but just wanted to highlight the usage of the [Reorderable] attribute
+        //get references to the properties. Could also create the ReorderableList directly here which would avoid the lookup in ReorderableDrawer.GetList
+        //but just wanted to highlight the usage of the [Reorderable] attribute
 
-		autoList = serializedObject.FindProperty("autoNameList");
-		dynamicList = serializedObject.FindProperty("dynamicNameList");
-		nameOverride = serializedObject.FindProperty("nameOverride");
-		nestedNameOverride = serializedObject.FindProperty("nestedNameOverride");
-	}
+        autoList = serializedObject.FindProperty("autoNameList");
+        dynamicList = serializedObject.FindProperty("dynamicNameList");
+        nameOverride = serializedObject.FindProperty("nameOverride");
+        nestedNameOverride = serializedObject.FindProperty("nestedNameOverride");
+    }
 
-	public override void OnInspectorGUI() {
+    public override void OnInspectorGUI()
+    {
 
-		serializedObject.Update();
+        serializedObject.Update();
 
-		EditorGUILayout.PropertyField(nameOverride);
-		EditorGUILayout.PropertyField(nestedNameOverride);
+        EditorGUILayout.PropertyField(nameOverride);
+        EditorGUILayout.PropertyField(nestedNameOverride);
 
-		EditorGUILayout.PropertyField(autoList);
-		EditorGUILayout.PropertyField(dynamicList);
+        EditorGUILayout.PropertyField(autoList);
+        EditorGUILayout.PropertyField(dynamicList);
 
-		//dynamically change the names of the elements
+        //dynamically change the names of the elements
 
-		UpdateElementNames(dynamicList, nameOverride);
-		UpdateNestedElementNames(dynamicList.FindPropertyRelative("array"), nestedNameOverride);
+        UpdateElementNames(dynamicList, nameOverride);
+        UpdateNestedElementNames(dynamicList.FindPropertyRelative("array"), nestedNameOverride);
 
-		serializedObject.ApplyModifiedProperties();
-	}
+        serializedObject.ApplyModifiedProperties();
+    }
 
-	private void UpdateNestedElementNames(SerializedProperty array, SerializedProperty nameOverride) {
+    private void UpdateNestedElementNames(SerializedProperty array, SerializedProperty nameOverride)
+    {
 
-		for (int i = 0; i < array.arraySize; i++) {
+        for (int i = 0; i < array.arraySize; i++)
+        {
 
-			UpdateElementNames(array.GetArrayElementAtIndex(i).FindPropertyRelative("nested"), nameOverride);
-		}
-	}
+            UpdateElementNames(array.GetArrayElementAtIndex(i).FindPropertyRelative("nested"), nameOverride);
+        }
+    }
 
-	private void UpdateElementNames(SerializedProperty listProperty, SerializedProperty nameOverride) {
+    private void UpdateElementNames(SerializedProperty listProperty, SerializedProperty nameOverride)
+    {
 
-		ReorderableList list = ReorderableDrawer.GetList(listProperty);
+        ReorderableList list = ReorderableDrawer.GetList(listProperty);
 
-		if (list != null) {
+        if (list != null)
+        {
 
-			list.elementNameOverride = nameOverride.stringValue;
-		}
-	}
+            list.elementNameOverride = nameOverride.stringValue;
+        }
+    }
 }
