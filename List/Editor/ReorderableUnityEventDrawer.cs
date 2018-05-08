@@ -13,34 +13,38 @@ namespace CippSharpEditor.Reorderable
     [CustomPropertyDrawer(typeof(ReorderableUnityEventAttribute))]
     public class ReorderableUnityEventDrawer : PropertyDrawer
     {
-        private static MethodInfo FindMethod = typeof(UnityEventBase).GetMethod("FindMethod",BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-        private static PropertyInfo mixedValueContent = typeof(EditorGUI).GetProperty("mixedValueContent", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-        private static MethodInfo Temp = typeof(GUIContent).GetMethod("Temp", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+        /*string name, object listener, PersistentListenerMode mode, System.Type argumentType*/
+        private static MethodInfo FindMethod = typeof(UnityEventBase).GetMethod("FindMethod", new []{ typeof(string), typeof(object), typeof(PersistentListenerMode), typeof(Type)});
         
-        
+        private static GUIContent s_MixedValueContent = new GUIContent("—|Mixed Values");
+      
         private static Dictionary<int, ReorderableList> lists = new Dictionary<int, ReorderableList>();
         private static object cache0;
         private static object cache1;
         
+        private static ReorderableAttribute m_reorderableAttribute = new ReorderableAttribute();
+        
         private UnityEventBase m_DummyEvent = null;
-        
-        
         
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            ReorderableUnityEventAttribute unityEventAttribute = attribute as ReorderableUnityEventAttribute;
-
-            ReorderableList list = GetList(property, new ReorderableAttribute());
-
-            return list != null ? list.GetHeight() : EditorGUIUtility.singleLineHeight;
+            ReorderableList list = GetList(property, m_reorderableAttribute);
+            bool hasList = list != null;
+            
+            if (hasList)
+            {
+                list.getElementHeightCallback += GetElementHeightCallback;
+                float height = list.GetHeight();
+                list.getElementHeightCallback -= GetElementHeightCallback;
+                return height;
+            }
+            
+            return EditorGUIUtility.singleLineHeight;
         }
 
-        private SerializedProperty calls;
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            
-            ReorderableUnityEventAttribute unityEventAttribute = attribute as ReorderableUnityEventAttribute;
-            calls = property.FindPropertyRelative("m_PersistentCalls.m_Calls");
+            SerializedProperty  calls = property.FindPropertyRelative("m_PersistentCalls.m_Calls");
             if (calls == null)
             {
                 GUI.Label(position, "ReorderableUnityEvent attribute work with UnityEvents only.", EditorStyles.label);
@@ -56,7 +60,7 @@ namespace CippSharpEditor.Reorderable
 
             if (calls != null)
             {
-                ReorderableList list = GetList(property, new ReorderableAttribute());
+                ReorderableList list = GetList(property, m_reorderableAttribute);
                 if (list != null)
                 {
                     list.drawElementCallback += DrawElementCallback;
@@ -66,12 +70,20 @@ namespace CippSharpEditor.Reorderable
             }
         }
 
+        private float GetElementHeightCallback(SerializedProperty element)
+        {
+            return 43.0f + EditorGUI.GetPropertyHeight(element);
+        }
+
+
         #region UnityEventDrawer Replica
         private static UnityEventBase GetDummyEvent(SerializedProperty prop)
         {
             System.Type type = System.Type.GetType(prop.FindPropertyRelative("m_TypeName").stringValue, false);
             if (type == null)
+            {
                 return (UnityEventBase) new UnityEvent();
+            }
             return Activator.CreateInstance(type) as UnityEventBase;
         }
         
@@ -144,8 +156,17 @@ namespace CippSharpEditor.Reorderable
                         GUIContent content;
                         if (EditorGUI.showMixedValue)
                         {
-                            content = (GUIContent)mixedValueContent.GetValue(Activator.CreateInstance(typeof(EditorGUI)), null);
-                            //EditorGUI.mixedValueContent;
+                            content = s_MixedValueContent;
+                            /*if (mixedValueContent == null)
+                            {
+                                Debug.LogError("Mixed Value Content not found.");
+                                content = new GUIContent();
+                            }
+                            else
+                            {
+                                content = (GUIContent) mixedValueContent.GetValue(Activator.CreateInstance(typeof(EditorGUI)));
+                                //EditorGUI.mixedValueContent;
+                            }*/
                         }
                         else
                         {
@@ -180,8 +201,9 @@ namespace CippSharpEditor.Reorderable
                                     }
                                 }
                             }
+                            
+                            content = new GUIContent(stringBuilder.ToString());
 
-                            content = (GUIContent)Temp.Invoke(Activator.CreateInstance(typeof(GUIContent)), new object[] {stringBuilder.ToString()});
                             //GUIContent.Temp(stringBuilder.ToString());
                         }
 
@@ -237,6 +259,13 @@ namespace CippSharpEditor.Reorderable
             {
                 return false;
             }
+
+            if (FindMethod == null)
+            {
+                Debug.LogError("Find Method not found!");
+                return false;
+            }
+
             return FindMethod.Invoke(dummyEvent, new object[] {methodName, (object) uObject, (object)modeEnum, argumentType}) != null;
             //dummyEvent.FindMethod(methodName, (object) uObject, modeEnum, argumentType) != null;
         }
@@ -344,11 +373,15 @@ namespace CippSharpEditor.Reorderable
                 else
                 {
                     if (objectReferenceValue == (UnityEngine.Object) null)
+                    {
                         return;
+                    }
                     System.Type type = System.Type.GetType(propertyRelative1.stringValue, false);
                     if (typeof(UnityEngine.Object).IsAssignableFrom(type) &&
                         type.IsInstanceOfType((object) objectReferenceValue))
+                    {
                         return;
+                    }
                     propertyRelative2.objectReferenceValue = (UnityEngine.Object) null;
                 }
             }
