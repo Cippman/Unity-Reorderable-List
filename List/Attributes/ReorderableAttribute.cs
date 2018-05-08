@@ -2,7 +2,6 @@ using UnityEngine;
 
 namespace CippSharp.Reorderable
 {
-
     public class ReorderableAttribute : PropertyAttribute
     {
         public bool add;
