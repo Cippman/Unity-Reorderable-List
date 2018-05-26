@@ -9,121 +9,102 @@ namespace CippSharp.Reorderable
     [Serializable]
     public abstract class ReorderableArray<T> : ICloneable, IList<T>, ICollection<T>, IEnumerable<T>
     {
+        [SerializeField] protected List<T> array = new List<T>();
 
-        [SerializeField]
-        protected T[] array = new T[0];
-
-        public ReorderableArray()
-            : this(0)
-        {
+        public ReorderableArray() : this(0) {
+            
         }
 
-        public ReorderableArray(int length)
-        {
-            array = new T[length];
+        public ReorderableArray(int length) {
+
+            array = new List<T>(length);
         }
 
-        public virtual T this [int index]
-        {
+        public T this[int index] {
 
             get { return array[index]; }
             set { array[index] = value; }
         }
-
-        public virtual int Length
-        {
-
-            get { return array.Length; }
+		
+        public int Length {
+			
+            get { return array.Count; }
         }
 
-        public virtual bool IsReadOnly
-        {
+        public bool IsReadOnly {
 
-            get { return array.IsReadOnly; }
+            get { return false; }
         }
 
-        public virtual int Count
-        {
+        public int Count {
 
-            get { return array.Length; }
+            get { return array.Count; }
         }
 
-        public virtual object Clone()
-        {
+        public object Clone() {
 
-            return array.Clone();
+            return new List<T>(array);
         }
 
-        public virtual bool Contains(T value)
-        {
+        public void CopyFrom(IEnumerable<T> value) {
 
-            return Array.IndexOf(array, value) >= 0;
+            array.Clear();
+            array.AddRange(value);
         }
 
-        public virtual int IndexOf(T value)
-        {
+        public bool Contains(T value) {
 
-            return Array.IndexOf(array, value);
+            return array.Contains(value);
         }
 
-        public virtual void Insert(int index, T item)
-        {
+        public int IndexOf(T value) {
 
-            ((IList<T>)array).Insert(index, item);
+            return array.IndexOf(value);
         }
 
-        public virtual void RemoveAt(int index)
-        {
+        public void Insert(int index, T item) {
 
-            ((IList<T>)array).RemoveAt(index);
+            array.Insert(index, item);
         }
 
-        public virtual void Add(T item)
-        {
+        public void RemoveAt(int index) {
 
-            ((IList<T>)array).Add(item);
+            array.RemoveAt(index);
         }
 
-        public virtual void Clear()
-        {
+        public void Add(T item) {
 
-            ((IList<T>)array).Clear();
+            array.Add(item);
         }
 
-        public virtual void CopyTo(T[] array, int arrayIndex)
-        {
+        public void Clear() {
 
-            ((IList<T>)this.array).CopyTo(array, arrayIndex);
+            array.Clear();
         }
 
-        public virtual bool Remove(T item)
-        {
+        public void CopyTo(T[] array, int arrayIndex) {
 
-            return ((IList<T>)array).Remove(item);
+            this.array.CopyTo(array, arrayIndex);
         }
 
-        public virtual IEnumerator<T> GetEnumerator()
-        {
+        public bool Remove(T item) {
 
-            return ((IList<T>)array).GetEnumerator();
+            return array.Remove(item);
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
+        public T[] ToArray() {
 
-            return ((IList<T>)array).GetEnumerator();
+            return array.ToArray();
         }
 
-        public static implicit operator Array(ReorderableArray<T> reorderableArray)
-        {
+        public IEnumerator<T> GetEnumerator() {
 
-            return reorderableArray.array;
+            return array.GetEnumerator();
         }
 
-        public static implicit operator T[](ReorderableArray<T> reorderableArray)
-        {
+        IEnumerator IEnumerable.GetEnumerator() {
 
-            return reorderableArray.array;
+            return array.GetEnumerator();
         }
     }
 }
