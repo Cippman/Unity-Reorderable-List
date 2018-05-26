@@ -224,6 +224,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d43367824cf02a4c8266269e7d9e432, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  references:
+    array:
+    - m_CallState: 1
+      m_Target: {fileID: 1386932974}
+      m_MethodName: SetActive
+      m_PersistentListenerMode: 0
   amerika:
     m_PersistentCalls:
       m_Calls:
@@ -366,6 +372,10 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e88bceeae38d8d34da23ff0aa6945f8f, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1386932974 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 153236, guid: e88bceeae38d8d34da23ff0aa6945f8f, type: 2}
+  m_PrefabInternal: {fileID: 1386932973}
 --- !u!1001 &1403507907
 Prefab:
   m_ObjectHideFlags: 0
