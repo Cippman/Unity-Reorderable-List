@@ -105,5 +105,10 @@ namespace CippSharp.Reorderable
 
             return array.GetEnumerator();
         }
+
+        public bool IsEmpty()
+        {
+            return Length < 1;
+        }
     }
 }
