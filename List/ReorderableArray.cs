@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 namespace CippSharp.Reorderable
 {
-
     [Serializable]
     public abstract class ReorderableArray<T> : ICloneable, IList<T>, ICollection<T>, IEnumerable<T>
     {
