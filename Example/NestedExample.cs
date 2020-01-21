@@ -1,37 +1,35 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using CippSharp.Reorderable;
+﻿using UnityEngine;
 
-public class NestedExample : MonoBehaviour
+namespace CippSharp.Reorderable.Examples
 {
-
-    [Reorderable]
-    public ExampleChildList list;
-
-    [System.Serializable]
-    public class ExampleChild
+    public class NestedExample : MonoBehaviour
     {
 
-        [Reorderable]
-        public NestedChildList nested;
-    }
+        [Reorderable] public ExampleChildList list;
 
-    [System.Serializable]
-    public class NestedChild
-    {
+        [System.Serializable]
+        public class ExampleChild
+        {
 
-        public float myValue;
-    }
+            [Reorderable] public NestedChildList nested;
+        }
 
-    [System.Serializable]
-    public class ExampleChildList : ReorderableArray<ExampleChild>
-    {
-    }
+        [System.Serializable]
+        public class NestedChild
+        {
 
-    [System.Serializable]
-    public class NestedChildList : ReorderableArray<NestedChild>
-    {
-        
+            public float myValue;
+        }
+
+        [System.Serializable]
+        public class ExampleChildList : ReorderableArray<ExampleChild>
+        {
+        }
+
+        [System.Serializable]
+        public class NestedChildList : ReorderableArray<NestedChild>
+        {
+
+        }
     }
 }

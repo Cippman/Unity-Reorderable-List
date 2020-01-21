@@ -1,12 +1,11 @@
-using UnityEngine;
+#if UNITY_EDITOR
 using CippSharp.Reorderable;
+using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 
-
 namespace CippSharpEditor.Reorderable
 {
-
     [CustomPropertyDrawer(typeof(ReorderableAttribute))]
     public class ReorderableDrawer : PropertyDrawer
     {
@@ -115,3 +114,4 @@ namespace CippSharpEditor.Reorderable
         }
     }
 }
+#endif

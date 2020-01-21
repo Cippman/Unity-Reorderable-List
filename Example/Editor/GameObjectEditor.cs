@@ -1,10 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using CippSharp.Reorderable.Examples;
 using UnityEditor;
 
-[CustomEditor(typeof(GameObjectExample))]
-public class GameObjectEditor : Editor {
+namespace CippSharpEditor.Reorderable.Examples
+{
+	[CustomEditor(typeof(GameObjectExample))]
+	public class GameObjectEditor : Editor
+	{
 
-	
+
+	}
 }

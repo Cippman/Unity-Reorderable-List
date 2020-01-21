@@ -1,54 +1,54 @@
-using UnityEngine;
+using CippSharp.Reorderable.Examples;
 using UnityEditor;
-using CippSharpEditor.Reorderable;
-using System.Collections;
-using System;
 
-[CanEditMultipleObjects]
-[CustomEditor(typeof(Example))]
-public class ExampleEditor : Editor
+namespace CippSharpEditor.Reorderable.Examples
 {
-	
-    private ReorderableList list1;
-    private SerializedProperty list2;
-    private ReorderableList list3;
-
-    void OnEnable()
+    [CanEditMultipleObjects]
+    [CustomEditor(typeof(Example))]
+    public class ExampleEditor : Editor
     {
 
-        list1 = new ReorderableList(serializedObject.FindProperty("list1"));
-        list1.elementNameProperty = "myEnum";
+        private ReorderableList list1;
+        private SerializedProperty list2;
+        private ReorderableList list3;
 
-        list2 = serializedObject.FindProperty("list2");
+        void OnEnable()
+        {
 
-        list3 = new ReorderableList(serializedObject.FindProperty("list3"));
-        list3.getElementNameCallback += GetList3ElementName;
-    }
+            list1 = new ReorderableList(serializedObject.FindProperty("list1"));
+            list1.elementNameProperty = "myEnum";
 
-    private string GetList3ElementName(SerializedProperty element)
-    {
+            list2 = serializedObject.FindProperty("list2");
 
-        return element.propertyPath;
-    }
+            list3 = new ReorderableList(serializedObject.FindProperty("list3"));
+            list3.getElementNameCallback += GetList3ElementName;
+        }
 
-    public override void OnInspectorGUI()
-    {
+        private string GetList3ElementName(SerializedProperty element)
+        {
 
-        serializedObject.Update();
+            return element.propertyPath;
+        }
 
-        //draw the list using GUILayout, you can of course specify your own position and label
-        list1.DoLayoutList();
+        public override void OnInspectorGUI()
+        {
 
-        //Caching the property is recommended
-        EditorGUILayout.PropertyField(list2);
+            serializedObject.Update();
 
-        //draw the final list, the element name is supplied through the callback defined above "GetList3ElementName"
-        list3.DoLayoutList();
+            //draw the list using GUILayout, you can of course specify your own position and label
+            list1.DoLayoutList();
 
-        //Draw without caching property
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("list4"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("list5"));
+            //Caching the property is recommended
+            EditorGUILayout.PropertyField(list2);
 
-        serializedObject.ApplyModifiedProperties();
+            //draw the final list, the element name is supplied through the callback defined above "GetList3ElementName"
+            list3.DoLayoutList();
+
+            //Draw without caching property
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("list4"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("list5"));
+
+            serializedObject.ApplyModifiedProperties();
+        }
     }
 }

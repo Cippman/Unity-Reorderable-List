@@ -1,53 +1,50 @@
 using UnityEngine;
-using CippSharp.Reorderable;
-using System.Collections;
 using System.Collections.Generic;
 
-public class Example : MonoBehaviour
+namespace CippSharp.Reorderable.Examples
 {
-    public List<ExampleChild> list1;
-
-    [Reorderable]
-    public ExampleChildList list2;
-
-    [Reorderable]
-    public ExampleChildList list3;
-
-    [Reorderable]
-    public StringList list4;
-
-    [Reorderable]
-    public VectorList list5;
-
-    [System.Serializable]
-    public class ExampleChild
+    public class Example : MonoBehaviour
     {
+        public List<ExampleChild> list1;
 
-        public string name;
-        public float value;
-        public ExampleEnum myEnum;
-        public LayerMask layerMask;
+        [Reorderable] public ExampleChildList list2;
 
-        public enum ExampleEnum
+        [Reorderable] public ExampleChildList list3;
+
+        [Reorderable] public StringList list4;
+
+        [Reorderable] public VectorList list5;
+
+        [System.Serializable]
+        public class ExampleChild
         {
-            EnumValue1,
-            EnumValue2,
-            EnumValue3
+
+            public string name;
+            public float value;
+            public ExampleEnum myEnum;
+            public LayerMask layerMask;
+
+            public enum ExampleEnum
+            {
+                EnumValue1,
+                EnumValue2,
+                EnumValue3
+            }
         }
-    }
 
-    [System.Serializable]
-    public class ExampleChildList : ReorderableArray<ExampleChild>
-    {
-    }
+        [System.Serializable]
+        public class ExampleChildList : ReorderableArray<ExampleChild>
+        {
+        }
 
-    [System.Serializable]
-    public class StringList : ReorderableArray<string>
-    {
-    }
+        [System.Serializable]
+        public class StringList : ReorderableArray<string>
+        {
+        }
 
-    [System.Serializable]
-    public class VectorList : ReorderableArray<Vector3>
-    {
+        [System.Serializable]
+        public class VectorList : ReorderableArray<Vector3>
+        {
+        }
     }
 }

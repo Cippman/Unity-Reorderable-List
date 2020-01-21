@@ -1,10 +1,10 @@
+#if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using CippSharp.Reorderable;
 
 namespace CippSharpEditor.Reorderable
 {
@@ -2198,3 +2198,4 @@ namespace CippSharpEditor.Reorderable
         }
     }
 }
+#endif
